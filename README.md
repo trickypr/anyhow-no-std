@@ -1,5 +1,8 @@
-Anyhow&ensp;¯\\\_(°ペ)\_/¯
-==========================
+# Why this fork?
+
+This includes the minimum required changes to get the `?` operator working with this package and `core::error::Error`. I provide no support and this will not be published to `crates.io`. This is just for a project that needs this to function.
+
+# Anyhow&ensp;¯\\\_(° ペ)\_/¯
 
 [<img alt="github" src="https://img.shields.io/badge/github-dtolnay/anyhow-8da0cb?style=for-the-badge&labelColor=555555&logo=github" height="20">](https://github.com/dtolnay/anyhow)
 [<img alt="crates.io" src="https://img.shields.io/crates/v/anyhow.svg?style=for-the-badge&color=fc8d62&logo=rust" height="20">](https://crates.io/crates/anyhow)
@@ -16,7 +19,7 @@ for easy idiomatic error handling in Rust applications.
 anyhow = "1.0"
 ```
 
-*Compiler support: requires rustc 1.39+*
+_Compiler support: requires rustc 1.39+_
 
 <br>
 
@@ -26,7 +29,7 @@ anyhow = "1.0"
   return type of any fallible function.
 
   Within the function, use `?` to easily propagate any error that implements the
-  `std::error::Error` trait.
+  `core::error::Error` trait.
 
   ```rust
   use anyhow::Result;
@@ -91,7 +94,7 @@ anyhow = "1.0"
   [`std::backtrace`]: https://doc.rust-lang.org/std/backtrace/index.html#environment-variables
   [rust-lang/rust#53487]: https://github.com/rust-lang/rust/issues/53487
 
-- Anyhow works with any error type that has an impl of `std::error::Error`,
+- Anyhow works with any error type that has an impl of `core::error::Error`,
   including ones defined in your crate. We do not bundle a `derive(Error)` macro
   but you can write the impls yourself or use a standalone macro like
   [thiserror].
@@ -138,7 +141,7 @@ anyhow = { version = "1.0", default-features = false }
 ```
 
 Since the `?`-based error conversions would normally rely on the
-`std::error::Error` trait which is only available through std, no_std mode will
+`core::error::Error` trait which is only available through std, no_std mode will
 require an explicit `.map_err(Error::msg)` when working with a non-Anyhow error
 type inside a function that returns Anyhow's error type.
 
@@ -147,7 +150,7 @@ type inside a function that returns Anyhow's error type.
 ## Comparison to failure
 
 The `anyhow::Error` type works something like `failure::Error`, but unlike
-failure ours is built around the standard library's `std::error::Error` trait
+failure ours is built around the standard library's `core::error::Error` trait
 rather than a separate trait `failure::Fail`. The standard library has adopted
 the necessary improvements for this to be possible as part of [RFC 2504].
 

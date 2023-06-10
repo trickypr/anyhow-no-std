@@ -19,7 +19,7 @@ const PROBE: &str = r#"
 
     use std::any::{Demand, Provider};
     use std::backtrace::{Backtrace, BacktraceStatus};
-    use std::error::Error;
+    use core::error::Error;
     use std::fmt::{self, Display};
 
     #[derive(Debug)]

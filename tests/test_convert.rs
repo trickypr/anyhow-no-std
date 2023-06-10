@@ -4,7 +4,7 @@ mod drop;
 
 use self::drop::{DetectDrop, Flag};
 use anyhow::{Error, Result};
-use std::error::Error as StdError;
+use core::error::Error as StdError;
 
 #[test]
 fn test_convert() {

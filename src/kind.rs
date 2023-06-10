@@ -2,7 +2,7 @@
 //
 // When anyhow! is given a single expr argument to turn into anyhow::Error, we
 // want the resulting Error to pick up the input's implementation of source()
-// and backtrace() if it has a std::error::Error impl, otherwise require nothing
+// and backtrace() if it has a core::error::Error impl, otherwise require nothing
 // more than Display and Debug.
 //
 // Expressed in terms of specialization, we want something like:
@@ -22,7 +22,7 @@
 //
 //     impl<T> AnyhowNew for T
 //     where
-//         T: std::error::Error + Send + Sync + 'static,
+//         T: core::error::Error + Send + Sync + 'static,
 //     {
 //         fn new(self) -> Error {
 //             /* use std error's source() and backtrace() */

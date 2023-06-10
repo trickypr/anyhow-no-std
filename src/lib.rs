@@ -17,7 +17,7 @@
 //!   the return type of any fallible function.
 //!
 //!   Within the function, use `?` to easily propagate any error that implements
-//!   the `std::error::Error` trait.
+//!   the `core::error::Error` trait.
 //!
 //!   ```
 //!   # pub trait Deserialize {}
@@ -111,7 +111,7 @@
 //!   #     }
 //!   # }
 //!   #
-//!   # impl std::error::Error for DataStoreError {}
+//!   # impl core::error::Error for DataStoreError {}
 //!   #
 //!   # const REDACTED_CONTENT: () = ();
 //!   #
@@ -145,7 +145,7 @@
 //!   [`std::backtrace`]: https://doc.rust-lang.org/std/backtrace/index.html#environment-variables
 //!   [rust-lang/rust#53487]: https://github.com/rust-lang/rust/issues/53487
 //!
-//! - Anyhow works with any error type that has an impl of `std::error::Error`,
+//! - Anyhow works with any error type that has an impl of `core::error::Error`,
 //!   including ones defined in your crate. We do not bundle a `derive(Error)`
 //!   macro but you can write the impls yourself or use a standalone macro like
 //!   [thiserror].
@@ -206,7 +206,7 @@
 //! ```
 //!
 //! Since the `?`-based error conversions would normally rely on the
-//! `std::error::Error` trait which is only available through std, no_std mode
+//! `core::error::Error` trait which is only available through std, no_std mode
 //! will require an explicit `.map_err(Error::msg)` when working with a
 //! non-Anyhow error type inside a function that returns Anyhow's error type.
 
@@ -214,6 +214,7 @@
 #![cfg_attr(backtrace, feature(error_generic_member_access, provide_any))]
 #![cfg_attr(doc_cfg, feature(doc_cfg))]
 #![cfg_attr(not(feature = "std"), no_std)]
+#![feature(error_in_core)]
 #![deny(dead_code, unused_imports, unused_mut)]
 #![allow(
     clippy::doc_markdown,
@@ -253,25 +254,14 @@ use crate::error::ErrorImpl;
 use crate::ptr::Own;
 use core::fmt::Display;
 
-#[cfg(not(feature = "std"))]
-use core::fmt::Debug;
-
-#[cfg(feature = "std")]
-use std::error::Error as StdError;
-
-#[cfg(not(feature = "std"))]
-trait StdError: Debug + Display {
-    fn source(&self) -> Option<&(dyn StdError + 'static)> {
-        None
-    }
-}
+use core::error::Error as StdError;
 
 #[doc(no_inline)]
 pub use anyhow as format_err;
 
 /// The `Error` type, a wrapper around a dynamic error type.
 ///
-/// `Error` works a lot like `Box<dyn std::error::Error>`, but with these
+/// `Error` works a lot like `Box<dyn core::error::Error>`, but with these
 /// differences:
 ///
 /// - `Error` requires that the error is `Send`, `Sync`, and `'static`.

@@ -39,9 +39,9 @@ impl Error {
 
     /// Create a new error object from a printable error message.
     ///
-    /// If the argument implements std::error::Error, prefer `Error::new`
+    /// If the argument implements core::error::Error, prefer `Error::new`
     /// instead which preserves the underlying error's cause chain and
-    /// backtrace. If the argument may or may not implement std::error::Error
+    /// backtrace. If the argument may or may not implement core::error::Error
     /// now or in the future, use `anyhow!(err)` which handles either way
     /// correctly.
     ///
@@ -83,7 +83,6 @@ impl Error {
         Error::from_adhoc(message, backtrace!())
     }
 
-    #[cfg(feature = "std")]
     #[cold]
     pub(crate) fn from_std<E>(error: E, backtrace: Option<Backtrace>) -> Self
     where
@@ -257,7 +256,7 @@ impl Error {
     /// #
     /// # type T = ();
     /// #
-    /// # impl std::error::Error for ParseError {}
+    /// # impl core::error::Error for ParseError {}
     /// # impl Debug for ParseError {
     /// #     fn fmt(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
     /// #         unimplemented!()
@@ -473,7 +472,7 @@ impl Error {
     /// #     }
     /// # }
     /// #
-    /// # impl std::error::Error for DataStoreError {}
+    /// # impl core::error::Error for DataStoreError {}
     /// #
     /// # const REDACTED_CONTENT: () = ();
     /// #
@@ -536,8 +535,6 @@ impl std::any::Provider for Error {
     }
 }
 
-#[cfg(feature = "std")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "std")))]
 impl<E> From<E> for Error
 where
     E: StdError + Send + Sync + 'static,
